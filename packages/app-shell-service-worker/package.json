@@ -39,6 +39,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/app-shell-service-worker"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/app-shell-service-worker#readme",
   "engines": {
     "node": ">=18"
   },

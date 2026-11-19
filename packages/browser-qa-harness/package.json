@@ -46,6 +46,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/browser-qa-harness"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/browser-qa-harness#readme",
   "engines": {
     "node": ">=18"
   },

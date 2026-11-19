@@ -44,6 +44,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/app-icon-generator"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/app-icon-generator#readme",
   "engines": {
     "node": ">=18"
   },

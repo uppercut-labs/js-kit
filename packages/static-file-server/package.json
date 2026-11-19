@@ -39,6 +39,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/static-file-server"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/static-file-server#readme",
   "engines": {
     "node": ">=18"
   },

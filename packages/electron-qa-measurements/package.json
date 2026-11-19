@@ -44,6 +44,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/electron-qa-measurements"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/electron-qa-measurements#readme",
   "engines": {
     "node": ">=18"
   },

@@ -36,6 +36,10 @@
     "url": "git+https://github.com/uppercut-labs/js-kit.git",
     "directory": "packages/read-body-with-size-limit"
   },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/read-body-with-size-limit#readme",
   "engines": {
     "node": ">=18"
   },
