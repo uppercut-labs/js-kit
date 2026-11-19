@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @uppercut-labs/static-file-server && npm run build --workspaces --if-present",
     "test": "vitest run",
     "check": "npm run build && npm test",
     "gate": "python tools/release_gate.py"
