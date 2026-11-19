@@ -1,0 +1,61 @@
+{
+  "name": "@uppercut-labs/react-modal-dialog",
+  "version": "0.1.0",
+  "description": "Accessible React modal dialog with focus trap, scroll lock, focus restore and Escape or backdrop close, unstyled by default.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node -e \"require('fs').copyFileSync('src/styles.css','dist/styles.css')\"",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "keywords": [
+    "react",
+    "modal",
+    "dialog",
+    "accessibility",
+    "focus-trap",
+    "a11y"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^25.0.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@testing-library/dom": "10.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/react-modal-dialog"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

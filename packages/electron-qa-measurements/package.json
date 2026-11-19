@@ -1,0 +1,53 @@
+{
+  "name": "@uppercut-labs/electron-qa-measurements",
+  "version": "0.1.0",
+  "description": "Measure typing latency, command-palette open time, launch marks and kill-and-relaunch recovery of an Electron window, with p50, p95 and max statistics.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "keywords": [
+    "electron",
+    "qa",
+    "latency",
+    "benchmark",
+    "typing",
+    "performance"
+  ],
+  "peerDependencies": {
+    "electron": ">=25"
+  },
+  "peerDependenciesMeta": {
+    "electron": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/electron-qa-measurements"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
