@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/electron-qa-measurements",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Measure typing latency, command-palette open time, launch marks and kill-and-relaunch recovery of an Electron window, with p50, p95 and max statistics.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

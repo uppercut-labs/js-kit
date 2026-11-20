@@ -52,6 +52,8 @@ Each scenario takes the window first. All accept `sleep` and `injector` options 
 
 Options for `measureTyping`: `field` (CSS selector), `text`, `gapMs` (35), `settleMs` (400), `slowThresholdMs` (16, the platform minimum).
 
+Every scenario that types also takes `focusWindow`. The default `sendInputEvent` injector needs the window focused, so without an `injector` the window is focused first; with an injector (such as `createProtocolInjector` with `emulatePageFocus`) it is not, because on macOS focusing the web contents makes the window the key window and takes the user's focus. Set `focusWindow` to override either default. Changed in 0.1.1: 0.1.0 always focused the window.
+
 Options for `measureCommandPalette`: `openSelector`, `key` (`k`), `modifier` (`meta` on macOS, `control` elsewhere), `runs` (6), `closeKey` (`Escape`), `settleMs` (300), `closeMs` (250).
 
 Options for `measureLaunchMarks`: `launchedAt` (epoch ms, required), `now`, `getDisplay(bounds)`, `benchScript`. Call it from the `did-finish-load` handler; `didFinishLoad` is the time it was called.

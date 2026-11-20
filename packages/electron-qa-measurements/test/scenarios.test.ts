@@ -18,6 +18,43 @@ import {
 } from '../src/index.js';
 import { FakePage, quickSleep } from './fake-window.js';
 
+describe('window focus', () => {
+  const spy = (page: FakePage) => {
+    const win = page.window();
+    let calls = 0;
+    const original = win.webContents.focus?.bind(win.webContents);
+    win.webContents.focus = () => {
+      calls += 1;
+      original?.();
+    };
+    return { win, calls: () => calls };
+  };
+  const passThrough = (page: FakePage) => ({ press: async (key: string) => page.window().webContents.sendInputEvent({ type: 'char', keyCode: key }) });
+
+  it('focuses the window for the default injector, which needs it', async () => {
+    const page = new FakePage();
+    const { win, calls } = spy(page);
+    await measureTyping(win, { field: '#field', text: 'ab', gapMs: 1, settleMs: 5, sleep: quickSleep });
+    expect(calls()).toBe(1);
+  });
+
+  it('never focuses the window when an injector is given (a protocol injector reaches the page without it)', async () => {
+    const page = new FakePage();
+    const { win, calls } = spy(page);
+    await measureTyping(win, { field: '#field', text: 'ab', gapMs: 1, settleMs: 5, sleep: quickSleep, injector: passThrough(page) });
+    await typeAndRecord(win, { field: '#field', text: 'cd', gapMs: 1, sleep: quickSleep, injector: passThrough(page) });
+    expect(calls()).toBe(0);
+  });
+
+  it('follows focusWindow when it is set', async () => {
+    const page = new FakePage();
+    const { win, calls } = spy(page);
+    await measureTyping(win, { field: '#field', text: 'a', gapMs: 1, settleMs: 5, sleep: quickSleep, focusWindow: false });
+    await measureTyping(win, { field: '#field', text: 'b', gapMs: 1, settleMs: 5, sleep: quickSleep, injector: passThrough(page), focusWindow: true });
+    expect(calls()).toBe(1);
+  });
+});
+
 describe('measureTyping', () => {
   it('measures one latency sample per typed character through the real probe script', async () => {
     const page = new FakePage();

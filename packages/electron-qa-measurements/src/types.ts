@@ -48,4 +48,11 @@ export interface CommonOptions {
   sleep?: (ms: number) => Promise<void>;
   /** Defaults to an injector that sends `webContents.sendInputEvent` events. */
   injector?: KeyInjector;
+  /**
+   * Whether to call `webContents.focus()` before typing. On macOS that makes the window the key
+   * window, which takes the user's focus. The default `sendInputEvent` injector needs it, so the
+   * default is true without an `injector` and false with one (a protocol injector with
+   * `emulatePageFocus` reaches the page without the window ever being focused).
+   */
+  focusWindow?: boolean;
 }

@@ -1,6 +1,11 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { defaultSleep, modifierForPlatform, resolveInjector } from './input.js';
+
+/** Focuses the window only when asked, or when the default injector needs it (see CommonOptions.focusWindow). */
+function focusWindowIfNeeded(win: WindowLike, options: CommonOptions) {
+  if (options.focusWindow ?? !options.injector) win.webContents.focus?.();
+}
 import {
   armPaletteScript,
   createLatencyProbeScript,
@@ -50,7 +55,7 @@ export async function measureTyping(win: WindowLike, options: TypingOptions): Pr
   const { field, text, gapMs = 35, settleMs = 400 } = options;
   const sleep = options.sleep ?? defaultSleep;
   const injector = resolveInjector(win.webContents, options);
-  win.webContents.focus?.();
+  focusWindowIfNeeded(win, options);
   const focused = (await win.webContents.executeJavaScript(focusFieldScript(field))) === true;
   const installed = await win.webContents.executeJavaScript(createLatencyProbeScript(field, options));
   if (installed !== true) throw new Error(`No element matches ${field}`);
@@ -210,7 +215,7 @@ export async function typeAndRecord(win: WindowLike, options: KillRecordOptions)
   const sleep = options.sleep ?? defaultSleep;
   const now = options.now ?? Date.now;
   const injector = resolveInjector(win.webContents, options);
-  win.webContents.focus?.();
+  focusWindowIfNeeded(win, options);
   await win.webContents.executeJavaScript(focusFieldScript(field));
   const before = await readField(win, field);
   if (before === null) throw new Error(`No element matches ${field}`);
