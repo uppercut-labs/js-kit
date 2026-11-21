@@ -7,6 +7,7 @@ Every package is versioned and published on its own. A release only goes out aft
 3. `npm pack --workspace packages/<name> --pack-destination dist-pack`
 4. `python tools/release_gate.py --artifact dist-pack/<tarball>.tgz`
    - The gate needs `RELEASE_GATE_DENYLIST` (a private file of strings that must never ship, kept outside this repo) and `gitleaks` on `PATH` or in `GITLEAKS`.
+   - The gate also needs `RELEASE_GATE_ALLOWED_EMAILS`, a comma-separated list of the commit author and committer emails it accepts. Any other address in the history fails the gate. For this repository: `packages@uppercut-labs.com,127160473+devin-thomas@users.noreply.github.com,noreply@github.com` (the last is the committer GitHub records on merged pull requests).
    - Exit code 0 is the only passing result.
 5. `npm publish dist-pack/<tarball>.tgz --access public`
 6. Tag the commit `<name>@<version>` and push the tag.
