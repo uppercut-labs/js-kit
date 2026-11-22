@@ -1,0 +1,49 @@
+{
+  "name": "@uppercut-labs/android-app-links",
+  "version": "0.1.0",
+  "description": "Serve Android App Links for a web product: the assetlinks.json Digital Asset Links file from package names and signing fingerprints, and a branded sign-in return page, as a function from Request to Response.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "keywords": [
+    "android",
+    "app-links",
+    "assetlinks",
+    "digital-asset-links",
+    "oauth",
+    "fetch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/android-app-links"
+  },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/android-app-links#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
