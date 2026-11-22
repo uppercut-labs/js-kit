@@ -71,9 +71,15 @@ if (!run.report.passed) console.error(run.report.failed);
 | `installedCheckEnvironment(options)` | The environment `runInstalledCheck` builds |
 | `INSTALLED_CHECK_STEPS` | The step names |
 
-## Not covered
+## What runs where
 
-There is no Windows version. Run the Node wrapper on macOS or Linux only; it starts `sh`.
+| Part | Language | Runs on |
+| --- | --- | --- |
+| `scripts/installed-check.sh` | POSIX `sh`, not Bash-specific (it runs under `dash` and `bash`) | macOS and Linux |
+| The Node wrapper (`runInstalledCheck` and the rest) | TypeScript on Node 18 or later; it starts `sh` | macOS and Linux |
+| The parser and environment helpers (`parseInstalledCheckOutput`, `installedCheckEnvironment`) | TypeScript on Node 18 or later | any system, Windows included |
+
+There is no PowerShell part and no Windows version of the check. On Windows, write the same steps as a PowerShell script in your own project, using the same step names and the same `FAILED:` convention, so `parseInstalledCheckOutput` reads its output too. Under Windows the package's script tests are skipped.
 
 ## License
 
