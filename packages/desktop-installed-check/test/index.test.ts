@@ -1,5 +1,5 @@
 import { execFile, spawn, type ChildProcess } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -202,8 +202,7 @@ describe('installed-check.sh', () => {
     let child: ChildProcess;
     let options: InstalledCheckOptions;
     beforeAll(async () => {
-      // The script finds the app's processes by program path, and macOS reports the resolved path of a symlinked folder.
-      dir = realpathSync(mkdtempSync(join(tmpdir(), 'installed-check-run-')));
+      dir = mkdtempSync(join(tmpdir(), 'installed-check-run-'));
       writeFileSync(join(dir, 'package.env'), 'PRODUCT_NAME="Example App"\nEXE_NAME=example\nLINUX_NAME=example\nAPP_ID=test.example\nVERSION=0.0.0\n');
       const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
       const root =
@@ -211,6 +210,8 @@ describe('installed-check.sh', () => {
       const exe = process.platform === 'darwin' ? join(root, 'Contents', 'MacOS', 'example') : join(root, 'example');
       mkdirSync(join(exe, '..'), { recursive: true });
       copyFileSync(process.platform === 'darwin' ? '/bin/sleep' : '/usr/bin/sleep', exe);
+      // macOS kills a copied system program until it carries its own signature.
+      if (process.platform === 'darwin') await exec('codesign', ['-f', '-s', '-', exe]);
       options = { packageEnv: join(dir, 'package.env'), evidenceDir: join(dir, 'evidence'), installTo: join(dir, 'apps'), kind: 'portable' };
       child = spawn(exe, ['120'], { stdio: 'ignore' });
       await new Promise((resolve) => setTimeout(resolve, 500));

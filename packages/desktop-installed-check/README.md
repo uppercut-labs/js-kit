@@ -45,7 +45,7 @@ PACKAGE_ENV=out/package.env EVIDENCE=qa/evidence DATA_DIR=/tmp/app-data NO_ACTIV
 | `EVIDENCE` | Where result files go (default `qa/evidence`). On macOS keep it and `DATA_DIR` on the internal disk: an app started by `open` that touches a removable or network volume waits for a privacy prompt that nobody answers |
 | `DATA_DIR` | The app's data folder. `collect` and `quit` find the running app's control channel through `control.json` there, so they require it |
 | `APP_SCRIPTS` | The folder holding the app's own `control.cjs`, `installed-helpers.cjs` and `installed-diagnostics.cjs` (default: the folder of the script) |
-| `INSTALL_TO` | macOS: the Applications folder (default `~/Applications`). Linux portable: the folder it was unpacked into (default `~/.local/opt`). The script finds the app's processes by the path of their program file, so give a path with no symlinks in it |
+| `INSTALL_TO` | macOS: the Applications folder (default `~/Applications`). Linux portable: the folder it was unpacked into (default `~/.local/opt`) |
 | `KIND` | Linux: `deb` (default) or `portable` |
 | `NO_ACTIVATE=1` | `launch` without taking focus, so the app serves its control channel |
 | `EMPTY_PATH=1` | `launch` with `PATH` emptied, to prove nothing is looked up there |
