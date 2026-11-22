@@ -1,5 +1,5 @@
 import { execFile, spawn, type ChildProcess } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
@@ -202,7 +202,8 @@ describe('installed-check.sh', () => {
     let child: ChildProcess;
     let options: InstalledCheckOptions;
     beforeAll(async () => {
-      dir = mkdtempSync(join(tmpdir(), 'installed-check-run-'));
+      // The script finds the app's processes by program path, and macOS reports the resolved path of a symlinked folder.
+      dir = realpathSync(mkdtempSync(join(tmpdir(), 'installed-check-run-')));
       writeFileSync(join(dir, 'package.env'), 'PRODUCT_NAME="Example App"\nEXE_NAME=example\nLINUX_NAME=example\nAPP_ID=test.example\nVERSION=0.0.0\n');
       const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
       const root =
