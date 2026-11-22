@@ -15,7 +15,7 @@ console.log(site.url); // http://127.0.0.1:<free port>
 await site.close();
 ```
 
-To use your own server, build a handler:
+To use your own server, or to answer some routes yourself first, build a handler:
 
 ```ts
 import { createServer } from 'node:http';
@@ -23,6 +23,25 @@ import { createStaticHandler } from '@uppercut-labs/static-file-server';
 
 const handle = createStaticHandler({ root: './dist', cleanUrls: true });
 createServer((req, res) => void handle(req, res)).listen(3000);
+```
+
+Stub routes, test controls and extra folders fit in two options:
+
+```ts
+const site = await startStaticServer({
+  root: './dist',
+  cleanUrls: true,
+  // Answer a request yourself: return true when you did.
+  before: (req, res) => {
+    if (req.url === '/api/contact') {
+      res.writeHead(405).end('disabled');
+      return true;
+    }
+    return false;
+  },
+  // Serve another folder under a URL prefix.
+  mounts: { '/media': './media-files' },
+});
 ```
 
 Command line:
@@ -52,7 +71,7 @@ npx static-file-server ./dist --port 8080 --spa
 | `host` | `127.0.0.1` | Interface for `startStaticServer` |
 | `index` | `index.html` | Index file name |
 | `spaFallback` | `false` | Send the index file for unknown paths without an extension. `{ exclude: ['/api'] }` keeps prefixes out |
-| `cleanUrls` | `false` | Try `<path>.html` and `<path>/index.html` |
+| `cleanUrls` | `false` | Try `<path>.html` and `<path>/index.html`. When a folder and a `<path>.html` page share a name, the page is served (as in a static export) |
 | `ranges` | `true` | Answer `Range` requests with 206 and 416 |
 | `cacheControl` | `no-cache` | A string, or a function of the URL path |
 | `headers` | none | Extra response headers, or a function of the file path |
@@ -62,8 +81,12 @@ npx static-file-server ./dist --port 8080 --spa
 | `basePath` | none | URL prefix the site is served under |
 | `allowedHosts` | any | Accepted `Host` names; others get 403 |
 | `onRequest` | none | Called with `{ method, path, status, served }` for each request |
+| `before` | none | `(request, response) => boolean \| Promise<boolean>`, called after the `allowedHosts` check. Return `true` when the hook answered the request; anything else lets it continue. Handled requests are not reported to `onRequest`. A throw becomes a 500 |
+| `mounts` | none | `{ '/prefix': './folder' }`: serve more folders under URL prefixes with the same guard, ranges, headers and caching. The longest prefix wins, a mount shadows same-named files in `root`, and `spaFallback` never applies to a mount |
 
-Only `GET` and `HEAD` are accepted; other methods get 405. A directory requested without a trailing slash is redirected with 301.
+Only `GET` and `HEAD` are accepted; other methods get 405. A directory requested without a trailing slash is redirected with 301, and the query string is kept.
+
+Changed in 0.2.0: added `before` and `mounts`; with `cleanUrls`, `<path>.html` is now served instead of a redirect when a folder has the same name; redirects keep the query string (0.1.0 dropped it).
 
 Command line flags: `--port`, `--host`, `--spa`, `--clean-urls`, `--no-ranges`, `--cache`, `--dotfiles`. Paths with dot segments are hidden unless `--dotfiles` is given.
 

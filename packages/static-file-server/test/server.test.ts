@@ -367,3 +367,179 @@ describe('options', () => {
     await expect(startStaticServer({ root: site, port: first.port })).rejects.toThrow();
   });
 });
+
+describe('clean URLs next to a folder of the same name', () => {
+  it('serves the page instead of redirecting to the folder', async () => {
+    const exported = path.join(outer, 'export');
+    await mkdir(path.join(exported, 'guide'), { recursive: true });
+    await writeFile(path.join(exported, 'guide.html'), '<h1>guide</h1>');
+    await writeFile(path.join(exported, 'guide', 'data.txt'), 'payload');
+    await writeFile(path.join(exported, 'other.html'), '<h1>other</h1>');
+    await mkdir(path.join(exported, 'other'), { recursive: true });
+    await writeFile(path.join(exported, 'other', 'index.html'), '<h1>other index</h1>');
+    const server = await startStaticServer({ root: exported, cleanUrls: true });
+    running.push(server);
+    const page = await raw(server, '/guide');
+    expect(page.status).toBe(200);
+    expect(page.body).toBe('<h1>guide</h1>');
+    expect((await raw(server, '/guide/data.txt')).body).toBe('payload');
+    expect((await raw(server, '/guide/')).status).toBe(404);
+    // The page wins over the folder's index, as static hosts do.
+    expect((await raw(server, '/other')).body).toBe('<h1>other</h1>');
+    expect((await raw(server, '/other/')).body).toBe('<h1>other index</h1>');
+  });
+
+  it('still redirects a folder when cleanUrls is off', async () => {
+    const exported = path.join(outer, 'export');
+    const server = await startStaticServer({ root: exported });
+    running.push(server);
+    const res = await raw(server, '/guide');
+    expect(res.status).toBe(301);
+    expect(res.headers.location).toBe('/guide/');
+  });
+});
+
+describe('redirects', () => {
+  it('keep the query string', async () => {
+    const server = await start({ basePath: '/site' });
+    const folder = await raw(server, '/site/docs?a=1&b=2');
+    expect(folder.status).toBe(301);
+    expect(folder.headers.location).toBe('/site/docs/?a=1&b=2');
+    const base = await raw(server, '/site?x=y');
+    expect(base.headers.location).toBe('/site/?x=y');
+  });
+});
+
+describe('before hook', () => {
+  it('answers a request itself and leaves the rest to the folder', async () => {
+    const seen: string[] = [];
+    const server = await start({
+      before: (req, res) => {
+        seen.push(`${req.method} ${req.url}`);
+        if (req.url === '/api/contact') {
+          res.writeHead(405, { 'content-type': 'text/plain' });
+          res.end('disabled');
+          return true;
+        }
+        return false;
+      },
+    });
+    const stub = await raw(server, '/api/contact', { method: 'POST' });
+    expect(stub.status).toBe(405);
+    expect(stub.body).toBe('disabled');
+    expect((await raw(server, '/about.html')).body).toBe('<h1>about</h1>');
+    expect(seen).toEqual(['POST /api/contact', 'GET /about.html']);
+  });
+
+  it('may be async and may handle methods the folder would refuse', async () => {
+    const server = await start({
+      before: async (req, res) => {
+        if (req.method !== 'POST' || req.url !== '/__control/reset') return false;
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        res.writeHead(204);
+        res.end();
+        return true;
+      },
+    });
+    expect((await raw(server, '/__control/reset', { method: 'POST' })).status).toBe(204);
+    expect((await raw(server, '/about.html', { method: 'POST' })).status).toBe(405);
+  });
+
+  it('runs after the host check and turns a throw into a 500', async () => {
+    const calls: string[] = [];
+    const logged: ServedRequest[] = [];
+    const server = await start({
+      allowedHosts: ['127.0.0.1'],
+      onRequest: (entry) => logged.push(entry),
+      before: (req) => {
+        calls.push(req.url ?? '');
+        if (req.url === '/boom') throw new Error('hook failed');
+        return false;
+      },
+    });
+    expect((await raw(server, '/about.html', { headers: { host: 'evil.example' } })).status).toBe(403);
+    expect(calls).toEqual([]);
+    const boom = await raw(server, '/boom');
+    expect(boom.status).toBe(500);
+    expect(boom.body).toBe('Server error\n');
+    expect(logged.at(-1)?.status).toBe(500);
+  });
+});
+
+describe('mounts', () => {
+  let media: string;
+
+  beforeAll(async () => {
+    media = path.join(outer, 'media');
+    await mkdir(path.join(media, 'sub'), { recursive: true });
+    await writeFile(path.join(media, 'clip.bin'), '0123456789');
+    await writeFile(path.join(media, 'sub', 'index.html'), '<h1>sub</h1>');
+    await writeFile(path.join(media, 'clip.glb'), 'glb');
+    await writeFile(path.join(site, 'media.txt'), 'not the mount');
+    try {
+      await symlink(path.join(outer, 'secret.txt'), path.join(media, 'leak.txt'));
+    } catch {
+      // The symlink check skips itself.
+    }
+  });
+
+  it('serves another folder under a prefix, with the same options', async () => {
+    const server = await start({ mounts: { '/media': media }, headers: { 'access-control-allow-origin': '*' }, mime: { '.glb': 'model/gltf-binary' } });
+    const file = await raw(server, '/media/clip.bin');
+    expect(file.status).toBe(200);
+    expect(file.body).toBe('0123456789');
+    expect(file.headers['access-control-allow-origin']).toBe('*');
+    expect(file.headers['accept-ranges']).toBe('bytes');
+    expect((await raw(server, '/media/clip.glb')).headers['content-type']).toBe('model/gltf-binary');
+    const ranged = await raw(server, '/media/clip.bin', { headers: { range: 'bytes=-3' } });
+    expect(ranged.status).toBe(206);
+    expect(ranged.body).toBe('789');
+    expect((await raw(server, '/media/sub/')).body).toBe('<h1>sub</h1>');
+    expect((await raw(server, '/about.html')).body).toBe('<h1>about</h1>');
+  });
+
+  it('redirects the prefix and folders inside it', async () => {
+    const server = await start({ mounts: { '/media': media } });
+    const prefix = await raw(server, '/media?v=1');
+    expect(prefix.status).toBe(301);
+    expect(prefix.headers.location).toBe('/media/?v=1');
+    const folder = await raw(server, '/media/sub');
+    expect(folder.status).toBe(301);
+    expect(folder.headers.location).toBe('/media/sub/');
+  });
+
+  it('keeps the path guard inside the mounted folder', async () => {
+    const server = await start({ mounts: { '/media': media } });
+    expect((await raw(server, '/media/..%2fsite%2fabout.html')).status).toBe(403);
+    expect((await raw(server, '/media/%00')).status).toBe(400);
+  });
+
+  it('refuses a symlink that leaves the mounted folder', async (ctx) => {
+    const server = await start({ mounts: { '/media': media } });
+    const res = await raw(server, '/media/leak.txt');
+    if (res.status === 404) return ctx.skip();
+    expect(res.status).toBe(403);
+  });
+
+  it('never applies the SPA fallback to a mounted folder', async () => {
+    const server = await start({ spaFallback: true, mounts: { '/media': media } });
+    expect((await raw(server, '/media/missing')).status).toBe(404);
+    expect((await raw(server, '/gallery')).body).toBe('<h1>home</h1>');
+  });
+
+  it('lets a mount shadow a file of the same name and prefers the longest prefix', async () => {
+    const deeper = path.join(outer, 'deeper');
+    await mkdir(deeper, { recursive: true });
+    await writeFile(path.join(deeper, 'clip.bin'), 'deeper clip');
+    const server = await start({ mounts: { '/media': media, '/media/raw': deeper } });
+    expect((await raw(server, '/media/raw/clip.bin')).body).toBe('deeper clip');
+    expect((await raw(server, '/media/clip.bin')).body).toBe('0123456789');
+    expect((await raw(server, '/media.txt')).body).toBe('not the mount');
+  });
+
+  it('works under a base path', async () => {
+    const server = await start({ basePath: '/docs', mounts: { '/media': media } });
+    expect((await raw(server, '/docs/media/clip.bin')).body).toBe('0123456789');
+    expect((await raw(server, '/media/clip.bin')).status).toBe(404);
+  });
+});
