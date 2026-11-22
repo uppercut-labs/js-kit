@@ -14,6 +14,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 | [`@uppercut-labs/electron-control-channel`](packages/electron-control-channel) | Let scripts talk to a running Electron app over a named pipe or Unix socket instead of a second instance: launch classification, server and client |
 | [`@uppercut-labs/electron-qa-measurements`](packages/electron-qa-measurements) | Measure typing latency, command-palette open time, launch marks and kill-and-relaunch recovery of an Electron window, with p50, p95 and max statistics |
 | [`@uppercut-labs/electron-private-memory`](packages/electron-private-memory) | Private memory of a running Electron app over its processes, by each system's definition, against a budget and a ceiling |
+| [`@uppercut-labs/fgc-data`](packages/fgc-data) | Fighting-game rosters, gameplay summaries, a catalog of games with team-selection schemas, and builder helpers, as typed data. Art attaches through `withArt` |
 | [`@uppercut-labs/react-modal-dialog`](packages/react-modal-dialog) | Accessible React modal dialog with focus trap, scroll lock, focus restore and Escape or backdrop close, unstyled by default |
 | [`@uppercut-labs/react-pwa-install-and-update`](packages/react-pwa-install-and-update) | React hooks for PWAs: capture the install prompt, track standalone mode, register a service worker, and detect and apply updates |
 | [`@uppercut-labs/read-body-with-size-limit`](packages/read-body-with-size-limit) | Read a fetch Request or Response body as bytes, text or JSON without buffering more than a byte limit |
