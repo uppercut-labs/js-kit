@@ -1,0 +1,52 @@
+{
+  "name": "@uppercut-labs/desktop-installed-check",
+  "version": "0.1.0",
+  "description": "Check an installed desktop app on macOS and Linux through files and its control channel, never through input events: one POSIX shell script with seven steps, and a Node wrapper that runs a step and reads its verdict.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./installed-check.sh": "./scripts/installed-check.sh"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "keywords": [
+    "electron",
+    "desktop",
+    "qa",
+    "installed-app",
+    "macos",
+    "linux",
+    "shell"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/desktop-installed-check"
+  },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/desktop-installed-check#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
