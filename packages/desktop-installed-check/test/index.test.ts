@@ -230,15 +230,16 @@ describe('installed-check.sh', () => {
       expect(run.output).toContain('summed over 1 processes');
     });
 
+    // The stand-in uses under 1 MB, which the script reports as 0 MB, so "over" needs a limit below zero.
     it('notes an app over its budget without failing it', async () => {
-      const run = await runInstalledCheck('memory', { ...options, budgetMb: 0, ceilingMb: 100000 });
+      const run = await runInstalledCheck('memory', { ...options, budgetMb: -1, ceilingMb: 100000 });
       expect(run.exitCode).toBe(0);
       expect(run.report.overBudget).toBe(true);
       expect(run.report.passed).toBe(true);
     });
 
     it('fails an app over its ceiling', async () => {
-      const run = await runInstalledCheck('memory', { ...options, budgetMb: 0, ceilingMb: 0 });
+      const run = await runInstalledCheck('memory', { ...options, budgetMb: -1, ceilingMb: -1 });
       expect(run.exitCode).toBe(1);
       expect(run.report.failed).toEqual(['over the ceiling']);
     });
