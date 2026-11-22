@@ -40,7 +40,7 @@ console.log(withPortraits[0]?.characters[0]?.art?.src);
 | `soloSchema`, `teamSchema(count)`, `mvcSchema(assists)` | Selection schemas |
 | `ROSTER_CHECKED_AT` | Date the rosters were last checked against their sources |
 
-Types: `Character<Art>`, `GameVersion<Art>`, `SelectionSchema`, `SelectionSlot`, `RosterRole`, `RosterEntry`, `SourcedRosterOptions`, `ArtLookup<Art>`. `Art` is `never` for the plain catalog and the type your lookup returns after `withArt`.
+Types: `Character<Art>`, `GameVersion<Art>`, `SelectionSchema` (with `noun` of `Character` or `Team`), `SelectionSlot`, `RosterRole`, `RosterEntry`, `SourcedRosterOptions`, `ArtLookup<Art>`. `Art` is `never` for the plain catalog and the type your lookup returns after `withArt`.
 
 ## Data and sources
 

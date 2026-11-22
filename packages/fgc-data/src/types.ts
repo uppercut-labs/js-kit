@@ -30,7 +30,7 @@ export interface SelectionSlot {
 /** The shape of a pick: a single character, or an ordered team of slots. */
 export interface SelectionSchema {
   version: 1;
-  noun: string;
+  noun: 'Character' | 'Team';
   verified: boolean;
   ordered: boolean;
   uniqueCharacters: boolean;
@@ -38,6 +38,8 @@ export interface SelectionSchema {
   teamOptionLabel?: string;
   teamOptionValues?: readonly string[];
   constraintNote?: string;
+  /** Says how an unverified schema was derived. Unused while every schema is verified. */
+  verificationNote?: string;
 }
 
 export interface GameVersion<Art = never> {
