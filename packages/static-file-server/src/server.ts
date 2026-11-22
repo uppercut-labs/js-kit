@@ -49,6 +49,20 @@ export interface StaticOptions {
   basePath?: string;
   /** Accepted `Host` header names (without port). Others get 403. Default: any host. */
   allowedHosts?: string[];
+  /**
+   * Run before anything is served, after the `allowedHosts` check. Return `true` (or a promise of `true`)
+   * when the hook has answered the request itself, for example a stub route or a test control. Any other
+   * result lets the request continue to the folder. Handled requests are not passed to `onRequest`.
+   * If the hook throws, the request gets a 500 unless the hook already sent headers.
+   */
+  before?: (request: IncomingMessage, response: ServerResponse) => boolean | Promise<boolean>;
+  /**
+   * Serve more folders under URL prefixes, for example `{ '/media': './catalog' }`. A request below a
+   * prefix is looked up in that folder with the prefix removed, using the same path guard, ranges,
+   * headers and caching. The longest matching prefix wins, and a mount shadows files of the same name in
+   * `root`. The `spaFallback` never applies to a mounted folder, so a missing file is a 404.
+   */
+  mounts?: Record<string, string>;
   /** Called once per finished request. */
   onRequest?: (request: ServedRequest) => void;
 }
@@ -82,14 +96,25 @@ export function createStaticHandler(options: StaticOptions): StaticHandler {
   const basePath = normalizeBase(options.basePath);
   const hosts = options.allowedHosts ? new Set(options.allowedHosts.map((host) => host.toLowerCase())) : null;
   const exclude = typeof options.spaFallback === 'object' ? (options.spaFallback.exclude ?? []) : [];
+  const mounts = Object.entries(options.mounts ?? {})
+    .map(([prefix, folder]) => ({ prefix: normalizeBase(prefix), root: path.resolve(folder) }))
+    .filter((mount) => mount.prefix !== '')
+    .sort((a, b) => b.prefix.length - a.prefix.length);
 
-  async function locate(local: string, decoded: string): Promise<Located> {
+  async function locate(root: string, local: string, decoded: string, mounted: boolean): Promise<Located> {
     const first = await resolveStaticPath(root, local);
     if (!first.ok) {
       if (first.problem === 'bad-request') return 'bad-request';
       if (first.problem === 'forbidden') return 'forbidden';
     } else if (first.isDirectory) {
-      if (!local.endsWith('/')) return 'redirect';
+      if (!local.endsWith('/')) {
+        // A static export has both `docs.html` and a `docs/` folder: the page wins over the redirect.
+        if (options.cleanUrls) {
+          const page = await resolveStaticPath(root, `${local}.html`);
+          if (page.ok && !page.isDirectory) return { file: page.file, served: 'clean-url' };
+        }
+        return 'redirect';
+      }
       const inner = await resolveStaticPath(root, `${local}${indexName}`);
       if (inner.ok && !inner.isDirectory) return { file: inner.file, served: 'index' };
     } else {
@@ -105,7 +130,7 @@ export function createStaticHandler(options: StaticOptions): StaticHandler {
       }
     }
     const excluded = exclude.some((prefix) => decoded === prefix || decoded.startsWith(`${prefix.replace(/\/$/, '')}/`));
-    if (options.spaFallback && extensionless && !excluded) {
+    if (options.spaFallback && extensionless && !excluded && !mounted) {
       const shell = await resolveStaticPath(root, `/${indexName}`);
       if (shell.ok && !shell.isDirectory) return { file: shell.file, served: 'fallback' };
     }
@@ -176,11 +201,15 @@ export function createStaticHandler(options: StaticOptions): StaticHandler {
         const host = (request.headers.host ?? '').toLowerCase().replace(/:\d+$/, '').replace(/^\[(.*)\]$/, '$1');
         if (!hosts.has(host)) return reply(403, request.url ?? '/', 'Host not allowed\n');
       }
+      if (options.before && (await options.before(request, response)) === true) return;
       if (method !== 'GET' && method !== 'HEAD') return reply(405, request.url ?? '/', 'Method not allowed\n', { allow: 'GET, HEAD' });
 
       let urlPath: string;
+      let search: string;
       try {
-        urlPath = new URL(request.url ?? '/', 'http://localhost').pathname;
+        const parsed = new URL(request.url ?? '/', 'http://localhost');
+        urlPath = parsed.pathname;
+        search = parsed.search;
         decodeURIComponent(urlPath);
       } catch {
         return reply(400, request.url ?? '/', 'Bad request\n');
@@ -189,7 +218,7 @@ export function createStaticHandler(options: StaticOptions): StaticHandler {
       let local = urlPath;
       if (basePath !== '') {
         if (urlPath === basePath) {
-          response.writeHead(301, { location: `${basePath}/` });
+          response.writeHead(301, { location: `${basePath}/${search}` });
           response.end();
           return finish(301, urlPath, 'none');
         }
@@ -200,9 +229,28 @@ export function createStaticHandler(options: StaticOptions): StaticHandler {
       const decoded = safeDecode(local);
       if (options.blockDotfiles && decoded.split('/').some((segment) => segment.startsWith('.'))) return await notFound(urlPath);
 
-      const outcome = await locate(local, decoded);
+      let folder = root;
+      let inFolder = local;
+      let inFolderDecoded = decoded;
+      let mounted = false;
+      for (const mount of mounts) {
+        if (local === mount.prefix) {
+          response.writeHead(301, { location: `${urlPath}/${search}` });
+          response.end();
+          return finish(301, urlPath, 'none');
+        }
+        if (local.startsWith(`${mount.prefix}/`)) {
+          folder = mount.root;
+          inFolder = local.slice(mount.prefix.length);
+          inFolderDecoded = safeDecode(inFolder);
+          mounted = true;
+          break;
+        }
+      }
+
+      const outcome = await locate(folder, inFolder, inFolderDecoded, mounted);
       if (outcome === 'redirect') {
-        response.writeHead(301, { location: `${urlPath}/` });
+        response.writeHead(301, { location: `${urlPath}/${search}` });
         response.end();
         return finish(301, urlPath, 'none');
       }
