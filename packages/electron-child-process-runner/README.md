@@ -56,6 +56,31 @@ else console.log(outcome.exitCode, outcome.stopReason, outcome.stderrTail);
 
 `Outcome` has `spawnError`, `exitCode`, `exitSignal`, `stderrTail`, `stderrTruncated`, `stopReason`, `escalated` (the process was killed rather than ending itself), `durationMs` and `pid`.
 
+## createLineReader(options)
+
+Splits a child's output into lines without holding more than one capped line, for a tool that writes one record per line. Feed it the chunks `onStdout` receives.
+
+```ts
+import { createLineReader, startProcess } from '@uppercut-labs/electron-child-process-runner';
+
+const lines = createLineReader({
+  maxLineBytes: 1024 * 1024,
+  maxTotalBytes: 64 * 1024 * 1024,
+  onLine: (line) => handle(JSON.parse(line)),
+  onOverflow: (kind) => run.stop(kind === 'line' ? 'line too long' : 'too much output'),
+});
+const run = startProcess({ command: '/usr/local/bin/my-tool', args: ['--events'], onStdout: (chunk) => lines.push(chunk) });
+```
+
+| Option | Meaning |
+| --- | --- |
+| `maxLineBytes` | A longer line is dropped up to its newline and reported once as `onOverflow('line', { bytes })` |
+| `maxTotalBytes` | After this many bytes `onOverflow('total', { bytes })` is called once and no more lines are delivered |
+| `onLine(line)` | Each complete line, decoded as UTF-8, without its newline or a trailing carriage return |
+| `onOverflow(kind, info)` | `kind` is `'line'` or `'total'` |
+
+The returned reader has `push(chunk)`, `end()` (returns `{ leftover, skipping }`: bytes left without a final newline), `stop()` (no more lines; later data is counted and dropped) and `stats` (`bytesSeen`, `lines`, `maxHeld`, `longLines`). `push` keeps accepting data after either cap, so the pipe is always drained and the child never blocks on a full buffer. A line split across chunks, even inside a multi-byte character, arrives whole. Added in 0.2.0.
+
 ## Process tree
 
 On macOS and Linux the child is started detached as a group leader, and a kill sends `SIGKILL` to the whole group. On Windows a kill runs `taskkill /PID <pid> /T /F`, and falls back to `child.kill()` if `taskkill` cannot start.

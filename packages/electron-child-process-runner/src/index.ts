@@ -253,3 +253,6 @@ export function startProcess(options: StartProcessOptions): RunningProcess {
 
   return { pid: child.pid ?? null, done, stop, kill, sweep };
 }
+
+export { createLineReader } from './lines.js';
+export type { LineReader, LineReaderOptions } from './lines.js';
