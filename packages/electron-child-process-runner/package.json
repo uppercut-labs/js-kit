@@ -1,7 +1,7 @@
 {
   "name": "@uppercut-labs/electron-child-process-runner",
-  "version": "0.1.0",
-  "description": "Start and stop child tools from a main process: streamed stdout, stderr tail, grace period then kill, process-tree kill and a done promise with exit info.",
+  "version": "0.2.0",
+  "description": "Start and stop child tools from a main process: streamed stdout, stderr tail, grace period then kill, process-tree kill and a done promise with exit info, and a bounded line reader for its output.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",
   "type": "module",
