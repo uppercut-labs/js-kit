@@ -2,7 +2,7 @@ export { serveFolder } from './serve.js';
 export type { ServeFolderOptions, ServedFolder } from './serve.js';
 export { BrowserLaunchError, browserAttempts, launchArgs, launchBrowser } from './browser.js';
 export type { LaunchAttempt, LaunchBrowserOptions, LaunchedBrowser } from './browser.js';
-export { auditPage, contextOptionsFor, copiedText, installClipboardCapture, openPage, park, settle } from './page.js';
+export { auditPage, collectPageDiagnostics, contextOptionsFor, copiedText, installClipboardCapture, openPage, park, settle } from './page.js';
 export type { AuditPageOptions, OpenPageOptions, OpenedPage, PageAudit, SettleOptions } from './page.js';
 export {
   DEFAULT_LIMITS,

@@ -65,6 +65,20 @@ await site.close();
 
 `openPage` options: `width` (1280), `height` (800), `scale` (1), `colorScheme` (`dark`), `reducedMotion` (`no-preference`), `locale` (`en-US`), `timezone` (`UTC`), `fixedTime`, `captureClipboard`, `storage` (`localStorage` entries set before load if missing), `initScripts`, `contextOptions`.
 
+Use `collectPageDiagnostics(page)` before navigating when Playwright Test or another runner owns the page:
+
+```ts
+const diagnostics = collectPageDiagnostics(page);
+try {
+  await page.goto('/');
+  // Run the app's assertions, then read diagnostics.errors and diagnostics.failedRequests.
+} finally {
+  diagnostics.stop();
+}
+```
+
+The collector leaves browser and context lifecycle to the caller. Its entries can contain page messages and full URLs. Use fixture data when saving or sharing diagnostics.
+
 ## Motion and CSS audit
 
 | Function | Purpose |
