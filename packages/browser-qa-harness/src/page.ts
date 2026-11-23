@@ -1,4 +1,4 @@
-import type { Browser, BrowserContext, BrowserContextOptions, Page } from 'playwright-core';
+import type { Browser, BrowserContext, BrowserContextOptions, ConsoleMessage, Page, Request, Response } from 'playwright-core';
 
 export interface OpenPageOptions {
   /** Viewport width in CSS pixels. Default 1280. */
@@ -27,13 +27,9 @@ export interface OpenPageOptions {
   contextOptions?: BrowserContextOptions;
 }
 
-export interface OpenedPage {
+export interface OpenedPage extends Pick<PageDiagnostics, 'errors' | 'failedRequests'> {
   context: BrowserContext;
   page: Page;
-  /** Uncaught page errors and `console.error` messages, as they arrive. */
-  errors: string[];
-  /** Requests that failed or answered 400 and above, as `status url` or `FAILED url`. */
-  failedRequests: string[];
 }
 
 /** The Playwright context options for a set of page options. Pure. */
@@ -89,17 +85,50 @@ export async function openPage(browser: Browser, options: OpenPageOptions = {}):
 
   const page = await context.newPage();
   if (options.fixedTime !== undefined) await page.clock.setFixedTime(options.fixedTime);
+  const { errors, failedRequests } = collectPageDiagnostics(page);
+  return { context, page, errors, failedRequests };
+}
+
+export interface PageDiagnostics {
+  /** Uncaught page errors and `console.error` messages, as they arrive. */
+  errors: string[];
+  /** Requests that failed or answered 400 and above, as `status url` or `FAILED url`. */
+  failedRequests: string[];
+  /** Detach this collector's listeners. Collected entries remain available. */
+  stop(): void;
+}
+
+/** Observe a caller-owned page. Attach before navigating to include startup failures. */
+export function collectPageDiagnostics(page: Page): PageDiagnostics {
   const errors: string[] = [];
   const failedRequests: string[] = [];
-  page.on('pageerror', (error) => errors.push(String(error)));
-  page.on('console', (message) => {
+
+  const onPageError = (error: Error): void => { errors.push(String(error)); };
+  const onConsole = (message: ConsoleMessage): void => {
     if (message.type() === 'error') errors.push(message.text());
-  });
-  page.on('requestfailed', (request) => failedRequests.push(`FAILED ${request.url()}`));
-  page.on('response', (response) => {
+  };
+  const onRequestFailed = (request: Request): void => {
+    failedRequests.push(`FAILED ${request.url()}`);
+  };
+  const onResponse = (response: Response): void => {
     if (response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`);
-  });
-  return { context, page, errors, failedRequests };
+  };
+
+  page.on('pageerror', onPageError);
+  page.on('console', onConsole);
+  page.on('requestfailed', onRequestFailed);
+  page.on('response', onResponse);
+
+  return {
+    errors,
+    failedRequests,
+    stop() {
+      page.off('pageerror', onPageError);
+      page.off('console', onConsole);
+      page.off('requestfailed', onRequestFailed);
+      page.off('response', onResponse);
+    },
+  };
 }
 
 /** Text the page tried to copy since `openPage({ captureClipboard: true })`, oldest first. */

@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   auditCss,
   auditPage,
+  collectPageDiagnostics,
   copiedText,
   drainMotion,
   installMotionRecorder,
@@ -67,6 +68,32 @@ describe.skipIf(launched === null)('with a browser', () => {
     expect(errors.some((e) => e.includes('boom'))).toBe(true);
     expect(failedRequests.some((r) => r.startsWith('404') && r.includes('missing.png'))).toBe(true);
     await context.close();
+  });
+
+  it('collects diagnostics on a caller-owned page and detaches without affecting other listeners', async () => {
+    const page = await launched!.browser.newPage();
+    try {
+      const diagnostics = collectPageDiagnostics(page);
+      const other = collectPageDiagnostics(page);
+      await page.route('**/connection-lost', (route) => route.abort());
+      await page.goto(site.url);
+      await page.evaluate(() => fetch('/connection-lost').catch(() => undefined));
+      await page.evaluate(() => { setTimeout(() => { throw new Error('uncaught fixture error'); }, 0); });
+      await expect.poll(() => diagnostics.errors).toEqual(expect.arrayContaining(['boom', 'Error: uncaught fixture error']));
+      expect(diagnostics.failedRequests).toEqual(expect.arrayContaining([
+        `404 ${new URL('/missing.png', site.url)}`,
+        `FAILED ${new URL('/connection-lost', site.url)}`,
+      ]));
+
+      diagnostics.stop();
+      diagnostics.stop();
+      await page.evaluate(() => console.error('after detach'));
+      await expect.poll(() => other.errors).toContain('after detach');
+      expect(diagnostics.errors).not.toContain('after detach');
+      other.stop();
+    } finally {
+      await page.close();
+    }
   });
 
   it('audits overflow and broken images', async () => {
