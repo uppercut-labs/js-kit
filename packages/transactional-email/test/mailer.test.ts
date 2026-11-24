@@ -76,6 +76,14 @@ describe('sending', () => {
     });
   });
 
+  it('passes a cache mode to fetch only when one is set', async () => {
+    const { fetch: f, calls } = fakeFetch(accepted);
+    await createMailer({ apiKey: KEY, from: 'a@example.com', fetch: f }).send(MESSAGE);
+    await createMailer({ apiKey: KEY, from: 'a@example.com', fetch: f, cache: 'no-store' }).send(MESSAGE);
+    expect('cache' in (calls[0]?.init ?? {})).toBe(false);
+    expect(calls[1]?.init.cache).toBe('no-store');
+  });
+
   it('uses another base URL', async () => {
     const { fetch: f, calls } = fakeFetch(accepted);
     await createMailer({ apiKey: KEY, from: 'a@example.com', fetch: f, baseUrl: 'https://mail.example.test/' }).send(MESSAGE);

@@ -14,6 +14,8 @@ export interface MailerConfig {
   readonly baseUrl?: string | undefined;
   /** The `fetch` to use, global `fetch` by default. */
   readonly fetch?: typeof fetch | undefined;
+  /** The `cache` mode to pass to `fetch` (`'no-store'`, for a runtime that supports it). Not set by default. */
+  readonly cache?: RequestCache | undefined;
 }
 
 export interface Mailer {
@@ -131,6 +133,7 @@ export function createMailer(config: MailerConfig = {}): Mailer {
       response = await fetcher(`${baseUrl}/emails`, {
         method: 'POST',
         redirect: 'manual',
+        ...(config.cache ? { cache: config.cache } : {}),
         signal: AbortSignal.timeout(timeoutMs),
         headers: {
           authorization: `Bearer ${config.apiKey}`,

@@ -35,6 +35,7 @@ The sender address, the domain it belongs to and the key come from your configur
 | `timeoutMs` | How long to wait for Resend. 10000 by default |
 | `baseUrl` | `https://api.resend.com` by default |
 | `fetch` | The `fetch` to use. Global `fetch` by default |
+| `cache` | A `cache` mode to pass to `fetch`, such as `'no-store'`, for a runtime that supports the option. Not set by default |
 
 `mailer.send(message, { idempotencyKey? })` never throws. `mailer.sendOrThrow(message, options)` throws a `MailSendError` (`reason`, `status`, `retryable`) and returns the message id.
 
