@@ -4,6 +4,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 
 | Package | What it does |
 | --- | --- |
+| [`@uppercut-labs/agent-ready-site`](packages/agent-ready-site) | Make a static site readable by agents: per-page head tags and JSON-LD, Markdown copies of every page, `sitemap.xml` and `sitemap.md`, `llms.txt` and `llms-full.txt`, `robots.txt` with a crawler allow policy and its check, and `Link` headers for `_headers` |
 | [`@uppercut-labs/android-app-links`](packages/android-app-links) | Serve `assetlinks.json` and a branded sign-in return page for Android App Links from package names and signing fingerprints, as a function from Request to Response |
 | [`@uppercut-labs/app-icon-generator`](packages/app-icon-generator) | Build every app icon from one source image: PNG sizes, maskable icons, ICO, ICNS, Android and Linux sets and a web manifest icons array |
 | [`@uppercut-labs/app-shell-service-worker`](packages/app-shell-service-worker) | Generate an app-shell service worker script from options: precache list, navigation fallback, cache versioning and update behavior. Function and CLI |

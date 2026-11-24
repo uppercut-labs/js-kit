@@ -1,0 +1,59 @@
+{
+  "name": "@uppercut-labs/agent-ready-site",
+  "version": "0.1.0",
+  "description": "Make a static site readable by agents: per-page head tags and JSON-LD, Markdown copies of every page, sitemap.xml and sitemap.md, llms.txt and llms-full.txt, robots.txt with a crawler allow policy and its check, and Link headers for _headers files.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "dependencies": {
+    "@uppercut-labs/security-headers": "^0.1.0"
+  },
+  "keywords": [
+    "llms.txt",
+    "agents",
+    "markdown",
+    "sitemap",
+    "json-ld",
+    "robots",
+    "seo",
+    "static-site",
+    "cloudflare-pages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/agent-ready-site"
+  },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/agent-ready-site#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
