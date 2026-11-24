@@ -76,7 +76,7 @@ export function createD1Store(db: D1Like, options: D1StoreOptions = {}): Counter
     },
     async deleteExpired(now, limit) {
       if (!Number.isSafeInteger(now) || now < 0 || !Number.isSafeInteger(limit) || limit < 1) {
-        throw new FixedWindowError('invalid_attempt', 'Invalid cleanup');
+        throw new FixedWindowError('invalid_attempt', 'Invalid rate limit cleanup');
       }
       const result = await db.prepare(`DELETE FROM ${n.table} WHERE rowid IN (
       SELECT rowid FROM ${n.table} WHERE ${n.expiresAt}<=? ORDER BY ${n.expiresAt} LIMIT ?)`).bind(now, limit).run();

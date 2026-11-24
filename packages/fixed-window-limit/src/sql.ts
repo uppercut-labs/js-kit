@@ -6,13 +6,13 @@ const NAME = /^[A-Za-z_][A-Za-z0-9_]{0,62}$/;
 export function tableName(value: string): string {
   const parts = typeof value === 'string' ? value.split('.') : [];
   if (parts.length < 1 || parts.length > 2 || !parts.every((part) => NAME.test(part))) {
-    throw new FixedWindowError('invalid_config', 'Invalid table name');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: table name');
   }
   return parts.map((part) => `"${part}"`).join('.');
 }
 
 export function columnName(value: string): string {
-  if (typeof value !== 'string' || !NAME.test(value)) throw new FixedWindowError('invalid_config', 'Invalid column name');
+  if (typeof value !== 'string' || !NAME.test(value)) throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: column name');
   return `"${value}"`;
 }
 
@@ -21,5 +21,5 @@ export function checkReservation(r: { partition: string; key: string; windowStar
     || !Number.isSafeInteger(r.windowStart) || r.windowStart < 0
     || (full && (!Number.isSafeInteger(r.expiresAt) || (r.expiresAt as number) <= r.windowStart
       || !Number.isSafeInteger(r.maxAttempts) || (r.maxAttempts as number) < 1));
-  if (bad) throw new FixedWindowError('invalid_attempt', 'Invalid reservation');
+  if (bad) throw new FixedWindowError('invalid_attempt', 'Invalid rate limit reservation');
 }

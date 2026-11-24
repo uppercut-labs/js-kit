@@ -79,19 +79,19 @@ export function createLimiter(options: LimiterOptions): Limiter {
     ? new TextEncoder().encode(options.fingerprintKey)
     : options.fingerprintKey;
   if (!store || typeof store.tryAcquire !== 'function') {
-    throw new FixedWindowError('invalid_config', 'A counter store with tryAcquire is required');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: a counter store with tryAcquire is required');
   }
   if (!(keyBytes instanceof Uint8Array) || keyBytes.byteLength < 32) {
-    throw new FixedWindowError('invalid_config', 'fingerprintKey must be at least 32 bytes');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: fingerprintKey must be at least 32 bytes');
   }
   if (typeof partition !== 'string' || !IDENTIFIER.test(partition)) {
-    throw new FixedWindowError('invalid_config', 'partition must be 1 to 200 letters, digits or _ . : -');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: partition must be 1 to 200 letters, digits or _ . : -');
   }
   if (options.policy !== undefined && !validPolicy(options.policy)) {
-    throw new FixedWindowError('invalid_config', 'Invalid default policy');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: default policy');
   }
   if (sweep && !(sweep.probability >= 0 && sweep.probability <= 1 && Number.isSafeInteger(sweep.limit) && sweep.limit >= 1)) {
-    throw new FixedWindowError('invalid_config', 'Invalid sweep options');
+    throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: sweep options');
   }
   const secret = Uint8Array.from(keyBytes);
   let cryptoKey: Promise<CryptoKey> | undefined;
@@ -100,15 +100,15 @@ export function createLimiter(options: LimiterOptions): Limiter {
   async function prepare(attempt: LimitAttempt) {
     const policy = attempt?.policy ?? options.policy;
     const now = attempt?.now ?? Date.now();
-    if (!attempt || !validPolicy(policy)) throw new FixedWindowError('invalid_attempt', 'Invalid or missing policy');
+    if (!attempt || !validPolicy(policy)) throw new FixedWindowError('invalid_attempt', 'Invalid rate limit attempt: policy missing or invalid');
     if (typeof attempt.action !== 'string' || !IDENTIFIER.test(attempt.action)
       || typeof attempt.subject !== 'string' || attempt.subject.length === 0 || attempt.subject.length > 2048
       || !Number.isSafeInteger(now) || now < 0) {
-      throw new FixedWindowError('invalid_attempt', 'Invalid action, subject or time');
+      throw new FixedWindowError('invalid_attempt', 'Invalid rate limit attempt: action, subject or time');
     }
     const windowStart = Math.floor(now / policy.windowMs) * policy.windowMs;
     const expiresAt = windowStart + policy.windowMs;
-    if (!Number.isSafeInteger(expiresAt)) throw new FixedWindowError('invalid_attempt', 'Invalid window end');
+    if (!Number.isSafeInteger(expiresAt)) throw new FixedWindowError('invalid_attempt', 'Invalid rate limit window expiration');
     const payload = new TextEncoder().encode(JSON.stringify([partition, attempt.action, attempt.subject]));
     const digest = new Uint8Array(await crypto.subtle.sign('HMAC', await importKey(), payload));
     return { policy, now, windowStart, expiresAt, key: toHex(digest) };
@@ -129,7 +129,7 @@ export function createLimiter(options: LimiterOptions): Limiter {
       const { policy, now, windowStart, expiresAt, key } = await prepare(attempt);
       const result = await store.tryAcquire({ partition, key, windowStart, expiresAt, maxAttempts: policy.maxAttempts });
       if (!result || typeof result.allowed !== 'boolean' || !Number.isSafeInteger(result.count) || result.count < 0) {
-        throw new FixedWindowError('invalid_store_result', 'Counter store returned an invalid result');
+        throw new FixedWindowError('invalid_store_result', 'Rate limit counter returned an invalid result');
       }
       await maybeSweep(now);
       const retryAfterMs = result.allowed ? 0 : Math.max(0, expiresAt - now);
@@ -144,12 +144,12 @@ export function createLimiter(options: LimiterOptions): Limiter {
     },
     async peek(attempt) {
       if (typeof store.count !== 'function') {
-        throw new FixedWindowError('unsupported_store', 'This counter store cannot read a window without taking an attempt');
+        throw new FixedWindowError('unsupported_store', 'This rate limit counter cannot read a window without taking an attempt');
       }
       const { policy, windowStart, expiresAt, key } = await prepare(attempt);
       const count = await store.count({ partition, key, windowStart });
       if (!Number.isSafeInteger(count) || count < 0) {
-        throw new FixedWindowError('invalid_store_result', 'Counter store returned an invalid count');
+        throw new FixedWindowError('invalid_store_result', 'Rate limit counter returned an invalid count');
       }
       return { limited: count >= policy.maxAttempts, count, remaining: Math.max(0, policy.maxAttempts - count), resetAt: expiresAt };
     },

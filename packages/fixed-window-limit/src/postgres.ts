@@ -28,9 +28,9 @@ export interface PostgresStoreOptions {
 function resolve(options: PostgresStoreOptions) {
   const c = options.columns ?? {};
   const windowType = options.windowType ?? 'bigint';
-  if (windowType !== 'bigint' && windowType !== 'timestamptz') throw new FixedWindowError('invalid_config', 'Invalid windowType');
+  if (windowType !== 'bigint' && windowType !== 'timestamptz') throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: windowType');
   const retainMs = options.retainMs ?? 2 * 24 * 60 * 60 * 1000;
-  if (!Number.isSafeInteger(retainMs) || retainMs < 0) throw new FixedWindowError('invalid_config', 'Invalid retainMs');
+  if (!Number.isSafeInteger(retainMs) || retainMs < 0) throw new FixedWindowError('invalid_config', 'Invalid rate limit configuration: retainMs');
   return {
     windowType,
     retainMs,
@@ -110,7 +110,7 @@ export function createPostgresStore(db: PgLike, options: PostgresStoreOptions = 
     },
     async deleteExpired(now, limit) {
       if (!Number.isSafeInteger(now) || now < 0 || !Number.isSafeInteger(limit) || limit < 1) {
-        throw new FixedWindowError('invalid_attempt', 'Invalid cleanup');
+        throw new FixedWindowError('invalid_attempt', 'Invalid rate limit cleanup');
       }
       const column = n.expiresAt ?? n.windowStart;
       const cutoff = n.expiresAt ? now : now - n.retainMs;
