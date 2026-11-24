@@ -4,17 +4,17 @@ import type { RateLimitOptions } from './retry.js';
 import { webhookKind } from './url.js';
 
 export interface SlackMessage {
-  readonly text?: string;
-  readonly blocks?: ReadonlyArray<Record<string, unknown>>;
-  readonly attachments?: ReadonlyArray<Record<string, unknown>>;
+  readonly text?: string | undefined;
+  readonly blocks?: ReadonlyArray<Record<string, unknown>> | undefined;
+  readonly attachments?: ReadonlyArray<Record<string, unknown>> | undefined;
   readonly [key: string]: unknown;
 }
 
 export interface SlackWebhookOptions extends RateLimitOptions {
   /** Longest `text`, in characters. Default 40 000, Slack's limit. */
-  readonly maxTextLength?: number;
+  readonly maxTextLength?: number | undefined;
   /** Accept a URL that is not on `hooks.slack.com`, for a test server or a proxy. */
-  readonly allowAnyUrl?: boolean;
+  readonly allowAnyUrl?: boolean | undefined;
 }
 
 export interface SlackWebhook {

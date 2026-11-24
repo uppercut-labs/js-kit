@@ -4,24 +4,24 @@ import type { RateLimitOptions } from './retry.js';
 import { webhookKind } from './url.js';
 
 export interface DiscordMessage {
-  readonly content?: string;
-  readonly username?: string;
-  readonly avatar_url?: string;
-  readonly embeds?: ReadonlyArray<Record<string, unknown>>;
-  readonly allowed_mentions?: Record<string, unknown>;
+  readonly content?: string | undefined;
+  readonly username?: string | undefined;
+  readonly avatar_url?: string | undefined;
+  readonly embeds?: ReadonlyArray<Record<string, unknown>> | undefined;
+  readonly allowed_mentions?: Record<string, unknown> | undefined;
   readonly [key: string]: unknown;
 }
 
 export interface DiscordWebhookOptions extends RateLimitOptions {
   /** Longest `content`, in characters. Longer text is cut with an ellipsis. Default 2000, Discord's limit. */
-  readonly maxContentLength?: number;
+  readonly maxContentLength?: number | undefined;
   /**
    * Sent when a message sets none. The default `{ parse: [] }` pings nobody, so `@everyone` or `<@id>` in
    * text you did not write stays plain text. Pass `null` to leave Discord's default behavior.
    */
-  readonly allowedMentions?: Record<string, unknown> | null;
+  readonly allowedMentions?: Record<string, unknown> | null | undefined;
   /** Accept a URL that is not a Discord webhook URL, for a test server or a proxy. */
-  readonly allowAnyUrl?: boolean;
+  readonly allowAnyUrl?: boolean | undefined;
 }
 
 export interface DiscordWebhook {

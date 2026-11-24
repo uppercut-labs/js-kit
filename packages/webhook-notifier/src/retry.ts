@@ -2,17 +2,17 @@ export type Sleep = (milliseconds: number) => Promise<void>;
 
 export interface RateLimitOptions {
   /** Defaults to the global `fetch`. */
-  readonly fetcher?: typeof fetch;
+  readonly fetcher?: typeof fetch | undefined;
   /** Defaults to a `setTimeout` promise. */
-  readonly sleep?: Sleep;
+  readonly sleep?: Sleep | undefined;
   /** Random source returning [0, 1), used for jitter. Defaults to `Math.random`. */
-  readonly random?: () => number;
+  readonly random?: (() => number) | undefined;
   /** Retries after a 429, so a request is sent at most `maxRetries + 1` times. Default 3. */
-  readonly maxRetries?: number;
+  readonly maxRetries?: number | undefined;
   /** Longest single wait taken from the server's answer, in milliseconds. Default 30 000. */
-  readonly maxDelayMs?: number;
+  readonly maxDelayMs?: number | undefined;
   /** Add random delay after the server's wait: up to 1 s, 2 s, 4 s ... capped at 32 s. Default true. */
-  readonly jitter?: boolean;
+  readonly jitter?: boolean | undefined;
 }
 
 const defaultSleep: Sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
