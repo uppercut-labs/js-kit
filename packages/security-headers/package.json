@@ -1,0 +1,49 @@
+{
+  "name": "@uppercut-labs/security-headers",
+  "version": "0.1.0",
+  "description": "Build Content-Security-Policy strings from directive maps, merge policies, set the usual response security headers on a Response, and edit Cloudflare Pages _headers files. No dependencies.",
+  "license": "MIT",
+  "author": "Uppercut Labs <packages@uppercut-labs.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "keywords": [
+    "csp",
+    "content-security-policy",
+    "security-headers",
+    "headers",
+    "cloudflare-workers",
+    "pages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uppercut-labs/js-kit.git",
+    "directory": "packages/security-headers"
+  },
+  "bugs": {
+    "url": "https://github.com/uppercut-labs/js-kit/issues"
+  },
+  "homepage": "https://github.com/uppercut-labs/js-kit/tree/main/packages/security-headers#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

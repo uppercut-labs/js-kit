@@ -19,6 +19,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 | [`@uppercut-labs/react-modal-dialog`](packages/react-modal-dialog) | Accessible React modal dialog with focus trap, scroll lock, focus restore and Escape or backdrop close, unstyled by default |
 | [`@uppercut-labs/react-pwa-install-and-update`](packages/react-pwa-install-and-update) | React hooks for PWAs: capture the install prompt, track standalone mode, register a service worker, and detect and apply updates |
 | [`@uppercut-labs/read-body-with-size-limit`](packages/read-body-with-size-limit) | Read a fetch Request or Response body as bytes, text or JSON without buffering more than a byte limit |
+| [`@uppercut-labs/security-headers`](packages/security-headers) | Build Content-Security-Policy strings from directive maps, derive per-route policies, set the usual security headers on a Response and edit Cloudflare Pages `_headers` files |
 | [`@uppercut-labs/static-file-server`](packages/static-file-server) | Dependency-free Node static file server with a path-traversal guard, MIME map, range requests and optional SPA fallback |
 
 ## Working in this repo
