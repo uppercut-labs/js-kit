@@ -20,6 +20,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 | [`@uppercut-labs/react-pwa-install-and-update`](packages/react-pwa-install-and-update) | React hooks for PWAs: capture the install prompt, track standalone mode, register a service worker, and detect and apply updates |
 | [`@uppercut-labs/read-body-with-size-limit`](packages/read-body-with-size-limit) | Read a fetch Request or Response body as bytes, text or JSON without buffering more than a byte limit |
 | [`@uppercut-labs/static-file-server`](packages/static-file-server) | Dependency-free Node static file server with a path-traversal guard, MIME map, range requests and optional SPA fallback |
+| [`@uppercut-labs/webhook-notifier`](packages/webhook-notifier) | Post to Discord and Slack webhooks with 429 handling (Retry-After, Discord `retry_after`, jitter), no-ping defaults and URL redaction; the retry loop is exported for any `fetch` client |
 
 ## Working in this repo
 
