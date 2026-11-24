@@ -10,9 +10,9 @@ export type StripeResult =
 
 export interface StripeVerifyOptions {
   /** Default 300, Stripe's own default. */
-  readonly toleranceSeconds?: number;
+  readonly toleranceSeconds?: number | undefined;
   /** Epoch milliseconds or a Date. Defaults to the current time. */
-  readonly now?: number | Date;
+  readonly now?: number | Date | undefined;
 }
 
 const MAX_SIGNATURES = 32;

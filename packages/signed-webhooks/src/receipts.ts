@@ -26,7 +26,7 @@ export type ReceiptStatus =
   | 'conflict';
 
 export interface ReceiptLedger {
-  record(input: { scope: string; id: string; body?: Body; digest?: string; now?: number }): Promise<ReceiptStatus>;
+  record(input: { scope: string; id: string; body?: Body | undefined; digest?: string | undefined; now?: number | undefined }): Promise<ReceiptStatus>;
 }
 
 export async function digestPayload(body: Body): Promise<string> {

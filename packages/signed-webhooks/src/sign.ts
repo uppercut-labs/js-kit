@@ -14,9 +14,9 @@ export type VerifyResult =
 
 export interface VerifyOptions {
   /** Largest allowed distance between the signed time and now, either way. Default 300. `null` skips the check. */
-  readonly toleranceSeconds?: number | null;
+  readonly toleranceSeconds?: number | null | undefined;
   /** Epoch milliseconds, or a Date. Defaults to the current time. */
-  readonly now?: number | Date;
+  readonly now?: number | Date | undefined;
 }
 
 /** HMAC-SHA256 over `${timestamp}.${body}`, as lower-case hex. */

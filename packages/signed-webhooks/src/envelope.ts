@@ -7,7 +7,7 @@ export interface EnvelopeInput<Data = unknown> {
   readonly occurredAt: string;
   readonly data: Data;
   /** Extra top-level fields, placed between `occurred_at` and `data`. */
-  readonly extra?: Readonly<Record<string, unknown>>;
+  readonly extra?: Readonly<Record<string, unknown>> | undefined;
 }
 
 const RESERVED = new Set(['schema_version', 'event_id', 'event_type', 'occurred_at', 'data']);

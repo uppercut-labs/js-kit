@@ -12,8 +12,8 @@ export interface D1Like {
 
 export interface D1ReceiptStoreOptions {
   /** Defaults to `webhook_receipts`. */
-  readonly table?: string;
-  readonly columns?: { readonly scope?: string; readonly id?: string; readonly digest?: string; readonly receivedAt?: string };
+  readonly table?: string | undefined;
+  readonly columns?: { readonly scope?: string | undefined; readonly id?: string | undefined; readonly digest?: string | undefined; readonly receivedAt?: string | undefined } | undefined;
 }
 
 const NAME = /^[A-Za-z_][A-Za-z0-9_]{0,62}$/;
