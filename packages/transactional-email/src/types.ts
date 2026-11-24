@@ -76,6 +76,6 @@ export interface CapturedMail {
   readonly html?: string | undefined;
   readonly headers?: Readonly<Record<string, string>> | undefined;
   readonly tags?: readonly { readonly name: string; readonly value: string }[] | undefined;
-  readonly attachments: readonly { readonly filename: string; readonly contentType?: string | undefined }[];
+  readonly attachments: readonly MailAttachment[];
   readonly idempotencyKey?: string | undefined;
 }

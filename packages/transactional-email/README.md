@@ -72,7 +72,7 @@ await mailer.send({ to: 'buyer@example.com', subject: 'Hi', text: 'Hello' }, { i
 capture.last()?.subject; // 'Hi'
 capture.to('BUYER@example.com'); // every captured message to that address
 capture.sent; // all of them, oldest first, with from, to, cc, bcc, replyTo, text, html, headers, tags,
-              // attachment names and the idempotency key (attachment content is not kept)
+              // attachments (with their base64 content) and the idempotency key
 capture.clear();
 ```
 

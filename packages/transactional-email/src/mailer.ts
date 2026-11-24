@@ -118,7 +118,7 @@ export function createMailer(config: MailerConfig = {}): Mailer {
         html: message.html,
         headers: message.headers,
         tags: message.tags,
-        attachments: (message.attachments ?? []).map((a) => ({ filename: a.filename, contentType: a.contentType })),
+        attachments: message.attachments ?? [],
         idempotencyKey: key,
       });
       return { ok: true, id: captured.id, captured: true };

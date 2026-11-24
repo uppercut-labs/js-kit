@@ -220,10 +220,9 @@ describe('capture', () => {
       subject: 'Your order',
       text: 'Thanks.',
       html: '<p>Thanks.</p>',
-      attachments: [{ filename: 'a.txt', contentType: 'text/plain' }],
+      attachments: [{ filename: 'a.txt', content: 'aGk=', contentType: 'text/plain' }],
       idempotencyKey: 'order/1',
     });
-    expect(JSON.stringify(capture.sent[0])).not.toContain('aGk=');
     expect(capture.to('other@example.com')).toHaveLength(1);
     expect(capture.to('BUYER@example.com')).toHaveLength(1);
     capture.clear();
