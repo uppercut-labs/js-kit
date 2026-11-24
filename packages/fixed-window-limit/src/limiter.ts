@@ -7,9 +7,9 @@ export interface SweepOptions {
   /** Most windows removed per sweep. */
   readonly limit: number;
   /** Random source returning [0, 1). Defaults to Math.random. */
-  readonly random?: () => number;
+  readonly random?: (() => number) | undefined;
   /** Called when a sweep fails. A failed sweep never fails the request. */
-  readonly onError?: (error: unknown) => void;
+  readonly onError?: ((error: unknown) => void) | undefined;
 }
 
 export interface LimiterOptions {
@@ -19,8 +19,8 @@ export interface LimiterOptions {
   /** Namespace stored in clear next to each fingerprint. Letters, digits and `_ . : -`. */
   readonly partition: string;
   /** Default policy; each call may pass its own. */
-  readonly policy?: FixedWindowPolicy;
-  readonly sweep?: SweepOptions;
+  readonly policy?: FixedWindowPolicy | undefined;
+  readonly sweep?: SweepOptions | undefined;
 }
 
 export interface LimitAttempt {
@@ -28,9 +28,9 @@ export interface LimitAttempt {
   readonly action: string;
   /** Who: a normalized email, client address or account id. At most 2048 characters. Never stored raw. */
   readonly subject: string;
-  readonly policy?: FixedWindowPolicy;
+  readonly policy?: FixedWindowPolicy | undefined;
   /** Epoch milliseconds. Defaults to Date.now(). */
-  readonly now?: number;
+  readonly now?: number | undefined;
 }
 
 export interface LimitDecision {

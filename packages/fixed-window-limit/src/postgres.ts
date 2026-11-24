@@ -9,20 +9,20 @@ export interface PgLike {
 
 export interface PostgresStoreOptions {
   /** Defaults to `fixed_window_counters`; `schema.table` is accepted. */
-  readonly table?: string;
+  readonly table?: string | undefined;
   readonly columns?: {
     /** Column for the partition, or `null` when the table has none: the fingerprint already includes it. */
-    readonly partition?: string | null;
-    readonly key?: string;
-    readonly windowStart?: string;
+    readonly partition?: string | null | undefined;
+    readonly key?: string | undefined;
+    readonly windowStart?: string | undefined;
     /** Column for the window end, or `null` when the table has none. */
-    readonly expiresAt?: string | null;
-    readonly count?: string;
-  };
+    readonly expiresAt?: string | null | undefined;
+    readonly count?: string | undefined;
+  } | undefined;
   /** `bigint` stores epoch milliseconds (default); `timestamptz` stores a timestamp. */
-  readonly windowType?: 'bigint' | 'timestamptz';
+  readonly windowType?: 'bigint' | 'timestamptz' | undefined;
   /** Without an expiry column, `deleteExpired` removes windows that started this long before now. Default two days. */
-  readonly retainMs?: number;
+  readonly retainMs?: number | undefined;
 }
 
 function resolve(options: PostgresStoreOptions) {

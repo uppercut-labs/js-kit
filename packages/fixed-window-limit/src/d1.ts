@@ -14,15 +14,15 @@ export interface D1Like {
 
 export interface D1StoreOptions {
   /** Defaults to `fixed_window_counters`. */
-  readonly table?: string;
+  readonly table?: string | undefined;
   /** Column names. All five exist in the table; map yours here to keep an existing schema. */
   readonly columns?: {
-    readonly partition?: string;
-    readonly key?: string;
-    readonly windowStart?: string;
-    readonly expiresAt?: string;
-    readonly count?: string;
-  };
+    readonly partition?: string | undefined;
+    readonly key?: string | undefined;
+    readonly windowStart?: string | undefined;
+    readonly expiresAt?: string | undefined;
+    readonly count?: string | undefined;
+  } | undefined;
 }
 
 function names(options: D1StoreOptions) {
