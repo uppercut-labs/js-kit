@@ -4,6 +4,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 
 | Package | What it does |
 | --- | --- |
+| [`@uppercut-labs/agent-ready-site`](packages/agent-ready-site) | Make a static site readable by agents: per-page head tags and JSON-LD, Markdown copies of every page, `sitemap.xml` and `sitemap.md`, `llms.txt` and `llms-full.txt`, `robots.txt` with a crawler allow policy and its check, and `Link` headers for `_headers` |
 | [`@uppercut-labs/android-app-links`](packages/android-app-links) | Serve `assetlinks.json` and a branded sign-in return page for Android App Links from package names and signing fingerprints, as a function from Request to Response |
 | [`@uppercut-labs/app-icon-generator`](packages/app-icon-generator) | Build every app icon from one source image: PNG sizes, maskable icons, ICO, ICNS, Android and Linux sets and a web manifest icons array |
 | [`@uppercut-labs/app-shell-service-worker`](packages/app-shell-service-worker) | Generate an app-shell service worker script from options: precache list, navigation fallback, cache versioning and update behavior. Function and CLI |
@@ -20,7 +21,11 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 | [`@uppercut-labs/react-modal-dialog`](packages/react-modal-dialog) | Accessible React modal dialog with focus trap, scroll lock, focus restore and Escape or backdrop close, unstyled by default |
 | [`@uppercut-labs/react-pwa-install-and-update`](packages/react-pwa-install-and-update) | React hooks for PWAs: capture the install prompt, track standalone mode, register a service worker, and detect and apply updates |
 | [`@uppercut-labs/read-body-with-size-limit`](packages/read-body-with-size-limit) | Read a fetch Request or Response body as bytes, text or JSON without buffering more than a byte limit |
+| [`@uppercut-labs/security-headers`](packages/security-headers) | Build Content-Security-Policy strings from directive maps, derive per-route policies, set the usual security headers on a Response and edit Cloudflare Pages `_headers` files |
 | [`@uppercut-labs/static-file-server`](packages/static-file-server) | Dependency-free Node static file server with a path-traversal guard, MIME map, range requests and optional SPA fallback |
+| [`@uppercut-labs/webhook-notifier`](packages/webhook-notifier) | Post to Discord and Slack webhooks with 429 handling (Retry-After, Discord `retry_after`, jitter), no-ping defaults and URL redaction; the retry loop is exported for any `fetch` client |
+
+Game development packages, `@uppercut-labs/fgc-data` among them, live in [game-kit](https://github.com/uppercut-labs/game-kit). They keep their npm names, so installing them is unchanged.
 
 ## Working in this repo
 
