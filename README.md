@@ -24,6 +24,7 @@ Small, focused JavaScript and TypeScript packages from Uppercut Labs, each publi
 | [`@uppercut-labs/signed-webhooks`](packages/signed-webhooks) | Sign and verify webhooks with HMAC-SHA256: timestamp tolerance, constant-time checks, `Stripe-Signature` headers, a fixed-order event envelope and delivery receipt dedupe, on Web Crypto |
 | [`@uppercut-labs/security-headers`](packages/security-headers) | Build Content-Security-Policy strings from directive maps, derive per-route policies, set the usual security headers on a Response and edit Cloudflare Pages `_headers` files |
 | [`@uppercut-labs/static-file-server`](packages/static-file-server) | Dependency-free Node static file server with a path-traversal guard, MIME map, range requests and optional SPA fallback |
+| [`@uppercut-labs/transactional-email`](packages/transactional-email) | Send transactional email through the Resend REST API with fetch only: message validation, an idempotency key, a timeout, errors that never echo the provider response, and a mock capture for tests |
 | [`@uppercut-labs/webhook-notifier`](packages/webhook-notifier) | Post to Discord and Slack webhooks with 429 handling (Retry-After, Discord `retry_after`, jitter), no-ping defaults and URL redaction; the retry loop is exported for any `fetch` client |
 
 Game development packages, `@uppercut-labs/fgc-data` among them, live in [game-kit](https://github.com/uppercut-labs/game-kit). They keep their npm names, so installing them is unchanged.
