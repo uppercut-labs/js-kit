@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/security-headers",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Build Content-Security-Policy strings from directive maps, merge policies, set the usual response security headers on a Response, and edit Cloudflare Pages _headers files. No dependencies.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/electron-private-memory",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Private memory of a running Electron app summed over its processes, by each system's definition (private bytes, phys_footprint, anonymous plus swap), with a budget and ceiling verdict.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

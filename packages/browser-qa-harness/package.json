@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/browser-qa-harness",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Headless browser QA helpers: serve a folder, launch a muted browser, open pages with error collection, and audit CSS and runtime motion.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",
@@ -24,7 +24,7 @@
     "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
   },
   "dependencies": {
-    "@uppercut-labs/static-file-server": "0.1.0"
+    "@uppercut-labs/static-file-server": "^1.0.0"
   },
   "peerDependencies": {
     "playwright-core": ">=1.40.0"

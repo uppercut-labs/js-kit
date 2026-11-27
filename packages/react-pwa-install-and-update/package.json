@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/react-pwa-install-and-update",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "React hooks for PWAs: capture the install prompt, track standalone mode, register a service worker, and detect and apply updates.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

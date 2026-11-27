@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/read-body-with-size-limit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Read a fetch Request or Response body as bytes, text or JSON without buffering more than a byte limit.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

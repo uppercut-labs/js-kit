@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/desktop-installed-check",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Check an installed desktop app on macOS and Linux through files and its control channel, never through input events: one POSIX shell script with seven steps, and a Node wrapper that runs a step and reads its verdict.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

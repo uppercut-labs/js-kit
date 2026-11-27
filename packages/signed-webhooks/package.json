@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/signed-webhooks",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sign and verify webhooks with HMAC-SHA256: timestamped signatures, tolerance windows, constant-time checks, Stripe-Signature headers and delivery receipt dedupe. Web Crypto only.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

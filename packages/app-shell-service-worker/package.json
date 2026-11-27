@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/app-shell-service-worker",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Generate an app-shell service worker script from options: precache list, navigation fallback, cache versioning and update behavior. Function and CLI.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

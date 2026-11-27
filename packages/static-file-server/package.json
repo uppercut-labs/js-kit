@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/static-file-server",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Dependency-free Node static file server with a path-traversal guard, MIME map, range requests and optional SPA fallback.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

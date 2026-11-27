@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/webhook-notifier",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Post messages to Discord and Slack webhooks, and any JSON endpoint, with 429 handling: Retry-After, Discord retry_after, jitter and a wait cap. fetch only.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

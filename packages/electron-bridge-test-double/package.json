@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/electron-bridge-test-double",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A fake preload bridge for Electron renderers: call log, event emitters, menu hook, fixture selection and safe storage, so the renderer runs in a plain browser.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",
