@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/electron-command-menu",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Build Electron app and dock menus from one command list, route commands to the focused window, sync enabled and checked state from the page, and format and match shortcuts on Windows and macOS.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/fixed-window-limit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Fixed-window attempt limiter with atomic reservation, fail-closed errors and pluggable counter stores: in-memory, Cloudflare D1 and Postgres.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

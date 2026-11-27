@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/electron-control-channel",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A control channel between scripts and a running Electron app over a named pipe or Unix socket, so a script never starts a second instance: launch classification, server and client.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

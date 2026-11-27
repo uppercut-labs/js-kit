@@ -1,6 +1,6 @@
 # js-kit
 
-Small, focused JavaScript and TypeScript packages from Uppercut Labs, each published on its own under the `@uppercut-labs` scope on npm.
+Small, focused JavaScript and TypeScript packages from Uppercut Labs. Every package is at version 1.0.0 and published on its own under the `@uppercut-labs` scope on npm.
 
 | Package | What it does |
 | --- | --- |

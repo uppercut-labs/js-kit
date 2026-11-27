@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/react-modal-dialog",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Accessible React modal dialog with focus trap, scroll lock, focus restore and Escape or backdrop close, unstyled by default.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

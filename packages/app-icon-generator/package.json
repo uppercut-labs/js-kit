@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/app-icon-generator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Build every app icon from one source image: PNG sizes, maskable icons, ICO, ICNS, Android and Linux sets and a web manifest icons array.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

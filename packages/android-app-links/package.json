@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/android-app-links",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Serve Android App Links for a web product: the assetlinks.json Digital Asset Links file from package names and signing fingerprints, and a branded sign-in return page, as a function from Request to Response.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",

@@ -1,6 +1,6 @@
 {
   "name": "@uppercut-labs/transactional-email",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Send transactional email through the Resend REST API with fetch only: an idempotency key, a timeout, error text that never echoes the provider response, and a mock capture for tests. Runs in Cloudflare Workers, Deno, Bun and Node 18+.",
   "license": "MIT",
   "author": "Uppercut Labs <packages@uppercut-labs.com>",
